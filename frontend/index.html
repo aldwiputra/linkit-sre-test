@@ -1,0 +1,1650 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CineVault · LINKIT SRE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ── TOKENS ─────────────────────────────────────────────── */
+      :root {
+        --bg: #0a0a0f;
+        --surface: #12121a;
+        --card: #1a1a26;
+        --border: #2a2a40;
+        --accent: #e63946;
+        --accent2: #f4a261;
+        --text: #e8e8f0;
+        --muted: #7070a0;
+        --success: #2ecc71;
+        --warn: #f39c12;
+        --font-head: "Bebas Neue", sans-serif;
+        --font-body: "DM Sans", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --r: 8px;
+        --rcard: 12px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--font-body);
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── SCROLLBAR ──────────────────────────────────────────── */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+
+      /* ── UTILITIES ──────────────────────────────────────────── */
+      .hidden {
+        display: none !important;
+      }
+      .flex {
+        display: flex;
+      }
+      .gap8 {
+        gap: 8px;
+      }
+      .gap16 {
+        gap: 16px;
+      }
+      .grow {
+        flex: 1;
+      }
+      .center {
+        align-items: center;
+      }
+      .between {
+        justify-content: space-between;
+      }
+
+      /* ── BUTTON ─────────────────────────────────────────────── */
+      button {
+        font-family: var(--font-body);
+        cursor: pointer;
+        border: none;
+        outline: none;
+        border-radius: var(--r);
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+        padding: 10px 20px;
+      }
+      .btn-primary:hover {
+        background: #c1232d;
+        transform: translateY(-1px);
+      }
+      .btn-secondary {
+        background: var(--border);
+        color: var(--text);
+        padding: 10px 20px;
+      }
+      .btn-secondary:hover {
+        background: #3a3a58;
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--muted);
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+      }
+      .btn-ghost:hover {
+        color: var(--text);
+        border-color: var(--muted);
+      }
+      .btn-icon {
+        background: transparent;
+        color: var(--muted);
+        padding: 6px 10px;
+        font-size: 16px;
+      }
+      .btn-icon:hover {
+        color: var(--accent);
+      }
+      .btn-danger {
+        background: rgba(230, 57, 70, 0.15);
+        color: var(--accent);
+        padding: 6px 12px;
+        border: 1px solid rgba(230, 57, 70, 0.3);
+        font-size: 13px;
+      }
+      .btn-danger:hover {
+        background: rgba(230, 57, 70, 0.3);
+      }
+      .btn-sm {
+        padding: 6px 14px;
+        font-size: 13px;
+      }
+
+      /* ── INPUT ──────────────────────────────────────────────── */
+      input,
+      select,
+      textarea {
+        font-family: var(--font-body);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: var(--r);
+        padding: 10px 14px;
+        font-size: 14px;
+        outline: none;
+        width: 100%;
+        transition: border-color 0.2s;
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: var(--accent);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+      label {
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 6px;
+        display: block;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: 14px;
+      }
+
+      /* ── LOGIN PAGE ─────────────────────────────────────────── */
+      #login-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(ellipse at top, #1a0a0f 0%, var(--bg) 60%);
+        position: relative;
+        overflow: hidden;
+      }
+      #login-page::before {
+        content: "CINEVAULT";
+        position: absolute;
+        font-family: var(--font-head);
+        font-size: 28vw;
+        color: rgba(230, 57, 70, 0.03);
+        letter-spacing: -2vw;
+        user-select: none;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      .login-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 48px 40px;
+        width: 380px;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+      }
+      .login-logo {
+        font-family: var(--font-head);
+        font-size: 36px;
+        letter-spacing: 2px;
+        color: var(--accent);
+        margin-bottom: 4px;
+      }
+      .login-sub {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 32px;
+      }
+      .login-error {
+        background: rgba(230, 57, 70, 0.1);
+        border: 1px solid rgba(230, 57, 70, 0.3);
+        color: var(--accent);
+        padding: 10px 14px;
+        border-radius: var(--r);
+        font-size: 13px;
+        margin-bottom: 16px;
+      }
+      .login-hint {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .login-hint code {
+        background: var(--bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: var(--font-mono);
+        color: var(--accent2);
+      }
+
+      /* ── APP SHELL ──────────────────────────────────────────── */
+      #app {
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+      }
+      #app.hidden {
+        display: none;
+      }
+
+      /* ── SIDEBAR ────────────────────────────────────────────── */
+      .sidebar {
+        width: 220px;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        padding: 24px 0;
+        flex-shrink: 0;
+      }
+      .sidebar-logo {
+        font-family: var(--font-head);
+        font-size: 24px;
+        letter-spacing: 3px;
+        color: var(--accent);
+        padding: 0 20px 24px;
+        border-bottom: 1px solid var(--border);
+      }
+      .sidebar-logo span {
+        color: var(--muted);
+        font-size: 10px;
+        display: block;
+        letter-spacing: 1px;
+        font-family: var(--font-body);
+        margin-top: -4px;
+      }
+      .nav {
+        padding: 16px 12px;
+        flex: 1;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: var(--r);
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.15s;
+        margin-bottom: 2px;
+      }
+      .nav-item:hover {
+        background: var(--card);
+        color: var(--text);
+      }
+      .nav-item.active {
+        background: rgba(230, 57, 70, 0.15);
+        color: var(--accent);
+      }
+      .nav-icon {
+        font-size: 18px;
+        width: 22px;
+        text-align: center;
+      }
+      .sidebar-footer {
+        padding: 16px 20px;
+        border-top: 1px solid var(--border);
+      }
+      .user-info {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      .user-info strong {
+        color: var(--text);
+        display: block;
+      }
+
+      /* ── MAIN ───────────────────────────────────────────────── */
+      .main {
+        flex: 1;
+        overflow-y: auto;
+        background: var(--bg);
+      }
+      .topbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 16px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .topbar-title {
+        font-family: var(--font-head);
+        font-size: 22px;
+        letter-spacing: 1px;
+      }
+      .page {
+        padding: 28px;
+      }
+      .page.hidden {
+        display: none;
+      }
+
+      /* ── STAT CARDS ─────────────────────────────────────────── */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      .stat-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--rcard);
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+      }
+      .stat-card.red::before {
+        background: var(--accent);
+      }
+      .stat-card.orange::before {
+        background: var(--accent2);
+      }
+      .stat-card.green::before {
+        background: var(--success);
+      }
+      .stat-card.blue::before {
+        background: #4a90e2;
+      }
+      .stat-label {
+        font-size: 11px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .stat-value {
+        font-family: var(--font-head);
+        font-size: 38px;
+        line-height: 1;
+      }
+      .stat-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      /* ── SECTION HEADER ─────────────────────────────────────── */
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .section-title {
+        font-family: var(--font-head);
+        font-size: 20px;
+        letter-spacing: 1px;
+      }
+
+      /* ── TABLE ──────────────────────────────────────────────── */
+      .table-wrap {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--rcard);
+        overflow: hidden;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        background: var(--surface);
+        padding: 12px 16px;
+        text-align: left;
+        font-size: 11px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+      }
+      td {
+        padding: 12px 16px;
+        font-size: 13px;
+        border-top: 1px solid var(--border);
+        vertical-align: middle;
+      }
+      tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .badge {
+        display: inline-block;
+        padding: 3px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .badge-watching {
+        background: rgba(74, 144, 226, 0.15);
+        color: #4a90e2;
+      }
+      .badge-watched {
+        background: rgba(46, 204, 113, 0.15);
+        color: var(--success);
+      }
+      .badge-want {
+        background: rgba(243, 156, 18, 0.15);
+        color: var(--warn);
+      }
+      .badge-dropped {
+        background: rgba(230, 57, 70, 0.15);
+        color: var(--accent);
+      }
+
+      /* ── RATING STARS ───────────────────────────────────────── */
+      .stars {
+        color: var(--accent2);
+        font-size: 13px;
+        letter-spacing: 1px;
+      }
+
+      /* ── SEARCH BAR ─────────────────────────────────────────── */
+      .search-wrap {
+        position: relative;
+        width: 280px;
+      }
+      .search-wrap input {
+        padding-left: 36px;
+      }
+      .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        pointer-events: none;
+        font-size: 14px;
+      }
+
+      /* ── PAGINATION ─────────────────────────────────────────── */
+      .pagination {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px;
+        border-top: 1px solid var(--border);
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .page-btn {
+        background: var(--border);
+        color: var(--text);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+      }
+      .page-btn:hover {
+        background: #3a3a58;
+      }
+      .page-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      /* ── MODAL ──────────────────────────────────────────────── */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        padding: 20px;
+      }
+      .modal {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px;
+        width: 500px;
+        max-width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+      }
+      .modal-title {
+        font-family: var(--font-head);
+        font-size: 22px;
+        letter-spacing: 1px;
+        margin-bottom: 24px;
+      }
+      .modal-footer {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 20px;
+      }
+      .modal-error {
+        background: rgba(230, 57, 70, 0.1);
+        border: 1px solid rgba(230, 57, 70, 0.3);
+        color: var(--accent);
+        padding: 10px 14px;
+        border-radius: var(--r);
+        font-size: 13px;
+        margin-bottom: 12px;
+      }
+
+      /* ── HEALTH PAGE ────────────────────────────────────────── */
+      .health-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .health-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--rcard);
+        padding: 20px;
+      }
+      .health-card h3 {
+        font-size: 13px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+      }
+      .health-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .health-ok {
+        background: rgba(46, 204, 113, 0.15);
+        color: var(--success);
+      }
+      .health-bad {
+        background: rgba(230, 57, 70, 0.15);
+        color: var(--accent);
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .dot.pulse {
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+      .log-box {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        padding: 16px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--muted);
+        max-height: 300px;
+        overflow-y: auto;
+        line-height: 1.7;
+      }
+      .log-err {
+        color: var(--accent);
+      }
+      .log-warn {
+        color: var(--warn);
+      }
+      .log-ok {
+        color: var(--success);
+      }
+      .log-info {
+        color: #4a90e2;
+      }
+
+      /* ── TOAST ──────────────────────────────────────────────── */
+      #toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        padding: 12px 18px;
+        font-size: 13px;
+        z-index: 200;
+        transform: translateY(80px);
+        opacity: 0;
+        transition: all 0.3s;
+        max-width: 320px;
+      }
+      #toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      #toast.success {
+        border-color: var(--success);
+        color: var(--success);
+      }
+      #toast.error {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      /* ── EMPTY STATE ────────────────────────────────────────── */
+      .empty {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+      }
+      .empty-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+      }
+      .empty-text {
+        font-size: 15px;
+      }
+
+      /* ── RESPONSIVE ─────────────────────────────────────────── */
+      @media (max-width: 768px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .health-grid {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          width: 60px;
+        }
+        .sidebar-logo span,
+        .nav-item span,
+        .sidebar-footer {
+          display: none;
+        }
+        .nav-icon {
+          width: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ══ LOGIN ══════════════════════════════════════════════════════════════ -->
+    <div id="login-page">
+      <div class="login-box">
+        <div class="login-logo">CineVault</div>
+        <div class="login-sub">LINKIT SRE Technical Test — Movie Dashboard</div>
+        <div id="login-error" class="login-error hidden"></div>
+        <div class="field">
+          <label>Username</label
+          ><input type="text" id="login-user" placeholder="admin" />
+        </div>
+        <div class="field">
+          <label>Password</label
+          ><input type="password" id="login-pass" placeholder="••••••••" />
+        </div>
+        <button
+          class="btn-primary"
+          style="width: 100%; margin-top: 4px"
+          id="login-btn"
+        >
+          Sign In →
+        </button>
+        <div class="login-hint">
+          Demo: <code>admin</code> / <code>admin123</code> &nbsp;·&nbsp;
+          <code>demo</code> / <code>demo123</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ APP ════════════════════════════════════════════════════════════════ -->
+    <div id="app" class="hidden">
+      <!-- Sidebar -->
+      <nav class="sidebar">
+        <div class="sidebar-logo">CV<span>CINEVAULT</span></div>
+        <div class="nav">
+          <div class="nav-item active" data-page="dashboard">
+            <span class="nav-icon">⬛</span><span>Dashboard</span>
+          </div>
+          <div class="nav-item" data-page="movies">
+            <span class="nav-icon">🎬</span><span>Movies</span>
+          </div>
+          <div class="nav-item" data-page="watchlist">
+            <span class="nav-icon">📋</span><span>Watchlist</span>
+          </div>
+          <div class="nav-item" data-page="health">
+            <span class="nav-icon">💚</span><span>Health</span>
+          </div>
+        </div>
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <strong id="sidebar-username">—</strong>Signed in
+          </div>
+          <button
+            class="btn-ghost"
+            style="width: 100%; font-size: 13px"
+            id="logout-btn"
+          >
+            Sign out
+          </button>
+        </div>
+      </nav>
+
+      <!-- Main -->
+      <main class="main">
+        <div class="topbar">
+          <div class="topbar-title" id="topbar-title">Dashboard</div>
+          <div class="flex gap8 center">
+            <div
+              id="health-badge"
+              class="health-status health-ok"
+              style="font-size: 12px"
+            >
+              <span class="dot pulse"></span> Healthy
+            </div>
+          </div>
+        </div>
+
+        <!-- ── DASHBOARD ── -->
+        <div class="page" id="page-dashboard">
+          <div class="stats-grid">
+            <div class="stat-card red">
+              <div class="stat-label">Total Movies</div>
+              <div class="stat-value" id="stat-movies">—</div>
+              <div class="stat-sub">In database</div>
+            </div>
+            <div class="stat-card orange">
+              <div class="stat-label">My Watchlist</div>
+              <div class="stat-value" id="stat-watchlist">—</div>
+              <div class="stat-sub">Personal entries</div>
+            </div>
+            <div class="stat-card green">
+              <div class="stat-label">Watched</div>
+              <div class="stat-value" id="stat-watched">—</div>
+              <div class="stat-sub">Completed</div>
+            </div>
+            <div class="stat-card blue">
+              <div class="stat-label">API Status</div>
+              <div
+                class="stat-value"
+                id="stat-health"
+                style="font-size: 22px; padding-top: 4px"
+              >
+                —
+              </div>
+              <div class="stat-sub" id="stat-uptime">Loading...</div>
+            </div>
+          </div>
+
+          <div class="section-head">
+            <div class="section-title">Recent Watchlist</div>
+            <button class="btn-primary btn-sm" onclick="showPage('watchlist')">
+              View All
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Movie</th>
+                  <th>Status</th>
+                  <th>Rating</th>
+                  <th>Added</th>
+                </tr>
+              </thead>
+              <tbody id="dash-watchlist-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── MOVIES ── -->
+        <div class="page hidden" id="page-movies">
+          <div class="section-head" style="margin-bottom: 20px">
+            <div class="flex gap8 center">
+              <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input
+                  type="text"
+                  id="movie-search"
+                  placeholder="Search movies…"
+                />
+              </div>
+            </div>
+            <div class="flex gap8">
+              <button class="btn-secondary btn-sm" id="sync-btn">
+                ⟳ Sync from SampleAPI
+              </button>
+              <button class="btn-primary btn-sm" id="add-movie-btn">
+                + Add Movie
+              </button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Year</th>
+                  <th>Genre</th>
+                  <th>Director</th>
+                  <th>IMDB</th>
+                  <th>Source</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="movies-body"></tbody>
+            </table>
+            <div class="pagination">
+              <button class="page-btn" id="movies-prev">‹ Prev</button>
+              <span id="movies-page-info">Page 1</span>
+              <button class="page-btn" id="movies-next">Next ›</button>
+              <span class="grow"></span>
+              <span id="movies-total-info"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── WATCHLIST ── -->
+        <div class="page hidden" id="page-watchlist">
+          <div class="section-head" style="margin-bottom: 20px">
+            <div class="flex gap8">
+              <select id="wl-filter" style="width: 160px">
+                <option value="">All Statuses</option>
+                <option value="want_to_watch">Want to Watch</option>
+                <option value="watching">Watching</option>
+                <option value="watched">Watched</option>
+                <option value="dropped">Dropped</option>
+              </select>
+            </div>
+            <button class="btn-primary btn-sm" id="add-wl-btn">
+              + Add to Watchlist
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Movie</th>
+                  <th>Status</th>
+                  <th>My Rating</th>
+                  <th>Notes</th>
+                  <th>Added</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="watchlist-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── HEALTH ── -->
+        <div class="page hidden" id="page-health">
+          <div class="health-grid">
+            <div class="health-card">
+              <h3>System Status</h3>
+              <div id="health-status-display"></div>
+            </div>
+            <div class="health-card">
+              <h3>Metrics</h3>
+              <div id="health-metrics"></div>
+            </div>
+          </div>
+
+          <div class="section-head">
+            <div class="section-title">Recent Alerts</div>
+            <button class="btn-ghost btn-sm" onclick="loadHealth()">
+              ⟳ Refresh
+            </button>
+          </div>
+          <div class="log-box" id="alerts-log">Loading alerts…</div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ══ MODALS ══════════════════════════════════════════════════════════════ -->
+
+    <!-- Add/Edit Movie Modal -->
+    <div class="overlay hidden" id="movie-modal">
+      <div class="modal">
+        <div class="modal-title" id="movie-modal-title">Add Movie</div>
+        <div class="modal-error hidden" id="movie-modal-err"></div>
+        <div class="flex gap16">
+          <div class="field grow">
+            <label>Title *</label><input type="text" id="m-title" />
+          </div>
+          <div class="field" style="width: 90px">
+            <label>Year</label><input type="text" id="m-year" />
+          </div>
+        </div>
+        <div class="flex gap16">
+          <div class="field grow">
+            <label>Genre</label><input type="text" id="m-genre" />
+          </div>
+          <div class="field" style="width: 80px">
+            <label>Rated</label><input type="text" id="m-rated" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Director</label><input type="text" id="m-director" />
+        </div>
+        <div class="field">
+          <label>Actors</label><input type="text" id="m-actors" />
+        </div>
+        <div class="field">
+          <label>IMDB Rating</label><input type="text" id="m-imdb" />
+        </div>
+        <div class="field">
+          <label>Plot</label><textarea id="m-plot"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" id="movie-modal-cancel">Cancel</button>
+          <button class="btn-primary" id="movie-modal-save">Save Movie</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Watchlist Modal -->
+    <div class="overlay hidden" id="wl-modal">
+      <div class="modal">
+        <div class="modal-title">Add to Watchlist</div>
+        <div class="modal-error hidden" id="wl-modal-err"></div>
+        <div class="field">
+          <label>Movie *</label>
+          <select id="wl-movie-select"></select>
+        </div>
+        <div class="flex gap16">
+          <div class="field grow">
+            <label>Status</label>
+            <select id="wl-status">
+              <option value="want_to_watch">Want to Watch</option>
+              <option value="watching">Watching</option>
+              <option value="watched">Watched</option>
+              <option value="dropped">Dropped</option>
+            </select>
+          </div>
+          <div class="field" style="width: 100px">
+            <label>Rating (1–10)</label>
+            <input
+              type="number"
+              id="wl-rating"
+              min="1"
+              max="10"
+              placeholder="—"
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label>Notes</label
+          ><textarea id="wl-notes" placeholder="Optional notes…"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" id="wl-modal-cancel">Cancel</button>
+          <button class="btn-primary" id="wl-modal-save">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Watchlist Modal -->
+    <div class="overlay hidden" id="wl-edit-modal">
+      <div class="modal">
+        <div class="modal-title">Edit Watchlist Entry</div>
+        <div class="modal-error hidden" id="wl-edit-err"></div>
+        <div class="flex gap16">
+          <div class="field grow">
+            <label>Status</label>
+            <select id="wl-edit-status">
+              <option value="want_to_watch">Want to Watch</option>
+              <option value="watching">Watching</option>
+              <option value="watched">Watched</option>
+              <option value="dropped">Dropped</option>
+            </select>
+          </div>
+          <div class="field" style="width: 100px">
+            <label>Rating (1–10)</label>
+            <input
+              type="number"
+              id="wl-edit-rating"
+              min="1"
+              max="10"
+              placeholder="—"
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label>Notes</label><textarea id="wl-edit-notes"></textarea>
+        </div>
+        <input type="hidden" id="wl-edit-id" />
+        <div class="modal-footer">
+          <button class="btn-secondary" id="wl-edit-cancel">Cancel</button>
+          <button class="btn-primary" id="wl-edit-save">Update</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast"></div>
+
+    <script>
+      // ── CONFIG ────────────────────────────────────────────────────────────────────
+      const API = "http://localhost:8383/api";
+      const AUTH_STORAGE_KEY = "cinevault.auth.token";
+      const USER_STORAGE_KEY = "cinevault.auth.user";
+
+      // ── STATE ─────────────────────────────────────────────────────────────────────
+      let token = null,
+        currentUser = null;
+      let moviesPage = 1,
+        moviesTotal = 0,
+        moviesPages = 1;
+      let searchTimeout = null;
+      let editMovieId = null;
+
+      // ── UTILS ─────────────────────────────────────────────────────────────────────
+      const $ = (id) => document.getElementById(id);
+      const show = (id) => $(id).classList.remove("hidden");
+      const hide = (id) => $(id).classList.add("hidden");
+
+      function saveAuthState() {
+        if (token) localStorage.setItem(AUTH_STORAGE_KEY, token);
+        if (currentUser)
+          localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(currentUser));
+      }
+
+      function clearAuthState() {
+        token = null;
+        currentUser = null;
+        localStorage.removeItem(AUTH_STORAGE_KEY);
+        localStorage.removeItem(USER_STORAGE_KEY);
+      }
+
+      function showAuthenticatedApp() {
+        $("sidebar-username").textContent = currentUser?.username || "User";
+        hide("login-page");
+        show("app");
+        showPage("dashboard");
+      }
+
+      async function restoreAuthState() {
+        const savedToken = localStorage.getItem(AUTH_STORAGE_KEY);
+        if (!savedToken) return;
+
+        token = savedToken;
+        const savedUser = localStorage.getItem(USER_STORAGE_KEY);
+        if (savedUser) {
+          try {
+            currentUser = JSON.parse(savedUser);
+          } catch (_) {
+            currentUser = null;
+          }
+        }
+
+        const me = await api("GET", "/auth/me");
+        if (!me.ok || !me.data?.data) {
+          clearAuthState();
+          return;
+        }
+
+        currentUser = me.data.data;
+        saveAuthState();
+        showAuthenticatedApp();
+      }
+
+      function toast(msg, type = "success") {
+        const el = $("toast");
+        el.textContent = msg;
+        el.className = `show ${type}`;
+        setTimeout(() => {
+          el.className = "";
+        }, 3000);
+      }
+
+      async function api(method, path, body) {
+        const opts = {
+          method,
+          headers: { "Content-Type": "application/json" },
+        };
+        if (token) opts.headers["Authorization"] = `Bearer ${token}`;
+        if (body) opts.body = JSON.stringify(body);
+        try {
+          const r = await fetch(API + path, opts);
+          const d = await r.json();
+          return { ok: r.ok, status: r.status, data: d };
+        } catch (e) {
+          return {
+            ok: false,
+            status: 0,
+            data: { message: "Network error — is the backend running?" },
+          };
+        }
+      }
+
+      function fmtDate(iso) {
+        return new Date(iso).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      }
+
+      function statusBadge(s) {
+        const map = {
+          watching: "badge-watching",
+          watched: "badge-watched",
+          want_to_watch: "badge-want",
+          dropped: "badge-dropped",
+        };
+        const lbl = {
+          watching: "Watching",
+          watched: "Watched",
+          want_to_watch: "Want",
+          dropped: "Dropped",
+        };
+        return `<span class="badge ${map[s] || ""}">${lbl[s] || s}</span>`;
+      }
+
+      function stars(n) {
+        if (!n) return '<span style="color:var(--muted)">—</span>';
+        return `<span class="stars">${"★".repeat(n)}${"☆".repeat(10 - n)}</span>`;
+      }
+
+      // ── LOGIN ─────────────────────────────────────────────────────────────────────
+      $("login-btn").onclick = doLogin;
+      $("login-pass").onkeydown = (e) => {
+        if (e.key === "Enter") doLogin();
+      };
+
+      async function doLogin() {
+        hide("login-error");
+        const username = $("login-user").value.trim();
+        const password = $("login-pass").value;
+        if (!username || !password) {
+          showLoginErr("Please enter credentials");
+          return;
+        }
+        $("login-btn").textContent = "Signing in…";
+        const r = await api("POST", "/auth/login", { username, password });
+        $("login-btn").textContent = "Sign In →";
+        if (!r.ok) {
+          showLoginErr(r.data.message || "Login failed");
+          return;
+        }
+        token = r.data.data.access_token;
+        currentUser = r.data.data.user;
+        saveAuthState();
+        showAuthenticatedApp();
+      }
+
+      function showLoginErr(msg) {
+        const el = $("login-error");
+        el.textContent = msg;
+        show("login-error");
+      }
+
+      $("logout-btn").onclick = () => {
+        clearAuthState();
+        hide("app");
+        show("login-page");
+        $("login-pass").value = "";
+      };
+
+      // ── NAVIGATION ────────────────────────────────────────────────────────────────
+      document.querySelectorAll(".nav-item").forEach((el) => {
+        el.onclick = () => showPage(el.dataset.page);
+      });
+
+      const PAGE_TITLES = {
+        dashboard: "Dashboard",
+        movies: "Movies",
+        watchlist: "My Watchlist",
+        health: "System Health",
+      };
+
+      function showPage(name) {
+        document.querySelectorAll(".nav-item").forEach((el) => {
+          el.classList.toggle("active", el.dataset.page === name);
+        });
+        document
+          .querySelectorAll(".page")
+          .forEach((el) => el.classList.add("hidden"));
+        $(`page-${name}`).classList.remove("hidden");
+        $("topbar-title").textContent = PAGE_TITLES[name] || name;
+        if (name === "dashboard") loadDashboard();
+        if (name === "movies") loadMovies(1);
+        if (name === "watchlist") loadWatchlist();
+        if (name === "health") loadHealth();
+      }
+
+      // ── DASHBOARD ────────────────────────────────────────────────────────────────
+      async function loadDashboard() {
+        const [health, wl] = await Promise.all([
+          api("GET", "/health"),
+          api("GET", "/watchlist/"),
+        ]);
+
+        // stats
+        if (health.ok) {
+          const h = health.data;
+          $("stat-health").textContent = h.status === "healthy" ? "✓" : "✗";
+          $("stat-uptime").textContent = `Uptime ${h.uptime_s}s`;
+        }
+
+        if (wl.ok) {
+          const items = wl.data.data || [];
+          $("stat-watchlist").textContent = items.length;
+          $("stat-watched").textContent = items.filter(
+            (i) => i.status === "watched",
+          ).length;
+
+          const body = $("dash-watchlist-body");
+          body.innerHTML = "";
+          const recent = items.slice(0, 8);
+          if (!recent.length) {
+            body.innerHTML =
+              '<tr><td colspan="4"><div class="empty"><div class="empty-icon">📋</div><div class="empty-text">No watchlist entries yet</div></div></td></tr>';
+          } else {
+            recent.forEach((item) => {
+              body.innerHTML += `<tr>
+          <td><strong>${item.movie?.title || "—"}</strong><br><span style="color:var(--muted);font-size:11px">${item.movie?.year || ""} · ${item.movie?.genre || ""}</span></td>
+          <td>${statusBadge(item.status)}</td>
+          <td>${stars(item.rating)}</td>
+          <td style="color:var(--muted)">${fmtDate(item.created_at)}</td>
+        </tr>`;
+            });
+          }
+        }
+
+        // movie count from metrics
+        const metrics = await api("GET", "/metrics");
+        if (metrics.ok && typeof metrics.data === "string") {
+          const m = metrics.data.match(/movies_total (\d+)/);
+          if (m) $("stat-movies").textContent = m[1];
+        }
+      }
+
+      // ── MOVIES ────────────────────────────────────────────────────────────────────
+      $("movie-search").oninput = () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => loadMovies(1), 400);
+      };
+      $("movies-prev").onclick = () => loadMovies(moviesPage - 1);
+      $("movies-next").onclick = () => loadMovies(moviesPage + 1);
+
+      async function loadMovies(page) {
+        moviesPage = page;
+        const q = $("movie-search").value.trim();
+        const path = `/movies/?page=${page}&per_page=15${q ? `&search=${encodeURIComponent(q)}` : ""}`;
+        const r = await api("GET", path);
+        if (!r.ok) {
+          toast("Failed to load movies", "error");
+          return;
+        }
+
+        const { data: items, total, pages } = r.data;
+        moviesTotal = total;
+        moviesPages = pages;
+
+        $("movies-total-info").textContent = `${total} movies`;
+        $("movies-page-info").textContent = `Page ${page} of ${pages || 1}`;
+        $("movies-prev").disabled = page <= 1;
+        $("movies-next").disabled = page >= (pages || 1);
+
+        const body = $("movies-body");
+        body.innerHTML = "";
+        if (!items.length) {
+          body.innerHTML =
+            '<tr><td colspan="7"><div class="empty"><div class="empty-icon">🎬</div><div class="empty-text">No movies found. Try syncing from SampleAPI!</div></div></td></tr>';
+          return;
+        }
+        items.forEach((m) => {
+          body.innerHTML += `<tr>
+      <td><strong>${m.title}</strong>${m.plot ? `<br><span style="color:var(--muted);font-size:11px;display:block;max-width:220px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${m.plot}</span>` : ""}</td>
+      <td>${m.year || "—"}</td>
+      <td><span style="color:var(--muted)">${m.genre || "—"}</span></td>
+      <td>${m.director || "—"}</td>
+      <td>${m.imdb_rating ? `<span style="color:var(--accent2)">★ ${m.imdb_rating}</span>` : "—"}</td>
+      <td><span style="font-size:11px;color:var(--muted)">${m.source}</span></td>
+      <td>
+        <div class="flex gap8">
+          <button class="btn-icon" onclick="openEditMovie(${JSON.stringify(m).replace(/"/g, "&quot;")})">✏</button>
+          <button class="btn-danger" onclick="deleteMovie(${m.id})">✕</button>
+        </div>
+      </td>
+    </tr>`;
+        });
+      }
+
+      // Sync
+      $("sync-btn").onclick = async () => {
+        $("sync-btn").textContent = "⟳ Syncing…";
+        $("sync-btn").disabled = true;
+        const r = await api("POST", "/movies/sync");
+        $("sync-btn").textContent = "⟳ Sync from SampleAPI";
+        $("sync-btn").disabled = false;
+        if (r.ok) {
+          toast(
+            `Synced! ${r.data.data.created} created, ${r.data.data.updated} updated`,
+          );
+          loadMovies(1);
+        } else toast(r.data.message || "Sync failed", "error");
+      };
+
+      // Add Movie Modal
+      $("add-movie-btn").onclick = () => {
+        editMovieId = null;
+        $("movie-modal-title").textContent = "Add Movie";
+        [
+          "title",
+          "year",
+          "genre",
+          "rated",
+          "director",
+          "actors",
+          "imdb",
+          "plot",
+        ].forEach((f) => ($(`m-${f}`).value = ""));
+        hide("movie-modal-err");
+        show("movie-modal");
+      };
+      $("movie-modal-cancel").onclick = () => hide("movie-modal");
+
+      function openEditMovie(m) {
+        editMovieId = m.id;
+        $("movie-modal-title").textContent = "Edit Movie";
+        $("m-title").value = m.title || "";
+        $("m-year").value = m.year || "";
+        $("m-genre").value = m.genre || "";
+        $("m-rated").value = m.rated || "";
+        $("m-director").value = m.director || "";
+        $("m-actors").value = m.actors || "";
+        $("m-imdb").value = m.imdb_rating || "";
+        $("m-plot").value = m.plot || "";
+        hide("movie-modal-err");
+        show("movie-modal");
+      }
+
+      $("movie-modal-save").onclick = async () => {
+        hide("movie-modal-err");
+        const body = {
+          title: $("m-title").value.trim(),
+          year: $("m-year").value.trim(),
+          genre: $("m-genre").value.trim(),
+          rated: $("m-rated").value.trim(),
+          director: $("m-director").value.trim(),
+          actors: $("m-actors").value.trim(),
+          imdb_rating: $("m-imdb").value.trim(),
+          plot: $("m-plot").value.trim(),
+        };
+        if (!body.title) {
+          showModalErr("movie-modal-err", "Title is required");
+          return;
+        }
+        const r = editMovieId
+          ? await api("PUT", `/movies/${editMovieId}`, body)
+          : await api("POST", "/movies/", body);
+        if (!r.ok) {
+          showModalErr("movie-modal-err", r.data.message || "Error");
+          return;
+        }
+        hide("movie-modal");
+        toast(editMovieId ? "Movie updated!" : "Movie added!");
+        loadMovies(moviesPage);
+      };
+
+      async function deleteMovie(id) {
+        if (!confirm("Delete this movie?")) return;
+        const r = await api("DELETE", `/movies/${id}`);
+        if (r.ok) {
+          toast("Movie deleted");
+          loadMovies(moviesPage);
+        } else toast(r.data.message || "Error deleting", "error");
+      }
+
+      // ── WATCHLIST ────────────────────────────────────────────────────────────────
+      $("wl-filter").onchange = loadWatchlist;
+
+      async function loadWatchlist() {
+        const status = $("wl-filter").value;
+        const path = `/watchlist/${status ? `?status=${status}` : ""}`;
+        const r = await api("GET", path);
+        if (!r.ok) {
+          toast("Failed to load watchlist", "error");
+          return;
+        }
+
+        const items = r.data.data || [];
+        const body = $("watchlist-body");
+        body.innerHTML = "";
+        if (!items.length) {
+          body.innerHTML =
+            '<tr><td colspan="6"><div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Your watchlist is empty</div></div></td></tr>';
+          return;
+        }
+        items.forEach((item) => {
+          body.innerHTML += `<tr>
+      <td><strong>${item.movie?.title || "—"}</strong><br><span style="color:var(--muted);font-size:11px">${item.movie?.year || ""} · ${item.movie?.genre || ""}</span></td>
+      <td>${statusBadge(item.status)}</td>
+      <td>${stars(item.rating)}</td>
+      <td style="color:var(--muted);max-width:180px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${item.notes || "—"}</td>
+      <td style="color:var(--muted)">${fmtDate(item.created_at)}</td>
+      <td>
+        <div class="flex gap8">
+          <button class="btn-icon" onclick="openEditWl(${JSON.stringify(item).replace(/"/g, "&quot;")})">✏</button>
+          <button class="btn-danger" onclick="deleteWl(${item.id})">✕</button>
+        </div>
+      </td>
+    </tr>`;
+        });
+      }
+
+      // Add Watchlist Modal
+      $("add-wl-btn").onclick = async () => {
+        // populate movie dropdown
+        const r = await api("GET", "/movies/?per_page=200");
+        const sel = $("wl-movie-select");
+        sel.innerHTML = "";
+        if (r.ok && r.data.data.length) {
+          r.data.data.forEach((m) => {
+            sel.innerHTML += `<option value="${m.id}">${m.title} ${m.year ? `(${m.year})` : ""}</option>`;
+          });
+        } else {
+          sel.innerHTML = "<option disabled>No movies — sync first!</option>";
+        }
+        $("wl-rating").value = "";
+        $("wl-notes").value = "";
+        hide("wl-modal-err");
+        show("wl-modal");
+      };
+      $("wl-modal-cancel").onclick = () => hide("wl-modal");
+      $("wl-modal-save").onclick = async () => {
+        hide("wl-modal-err");
+        const body = {
+          movie_id: parseInt($("wl-movie-select").value),
+          status: $("wl-status").value,
+          rating: $("wl-rating").value ? parseInt($("wl-rating").value) : null,
+          notes: $("wl-notes").value.trim(),
+        };
+        const r = await api("POST", "/watchlist/", body);
+        if (!r.ok) {
+          showModalErr("wl-modal-err", r.data.message || "Error");
+          return;
+        }
+        hide("wl-modal");
+        toast("Added to watchlist!");
+        loadWatchlist();
+      };
+
+      function openEditWl(item) {
+        $("wl-edit-id").value = item.id;
+        $("wl-edit-status").value = item.status;
+        $("wl-edit-rating").value = item.rating || "";
+        $("wl-edit-notes").value = item.notes || "";
+        hide("wl-edit-err");
+        show("wl-edit-modal");
+      }
+      $("wl-edit-cancel").onclick = () => hide("wl-edit-modal");
+      $("wl-edit-save").onclick = async () => {
+        hide("wl-edit-err");
+        const id = $("wl-edit-id").value;
+        const body = {
+          status: $("wl-edit-status").value,
+          rating: $("wl-edit-rating").value
+            ? parseInt($("wl-edit-rating").value)
+            : null,
+          notes: $("wl-edit-notes").value.trim(),
+        };
+        const r = await api("PUT", `/watchlist/${id}`, body);
+        if (!r.ok) {
+          showModalErr("wl-edit-err", r.data.message || "Error");
+          return;
+        }
+        hide("wl-edit-modal");
+        toast("Watchlist updated!");
+        loadWatchlist();
+      };
+
+      async function deleteWl(id) {
+        if (!confirm("Remove from watchlist?")) return;
+        const r = await api("DELETE", `/watchlist/${id}`);
+        if (r.ok) {
+          toast("Removed from watchlist");
+          loadWatchlist();
+        } else toast(r.data.message || "Error", "error");
+      }
+
+      // ── HEALTH ────────────────────────────────────────────────────────────────────
+      async function loadHealth() {
+        const [hRes, alertRes, metRes] = await Promise.all([
+          api("GET", "/health"),
+          api("GET", "/alerts"),
+          api("GET", "/metrics"),
+        ]);
+
+        // Status card
+        if (hRes.ok) {
+          const h = hRes.data;
+          const ok = h.status === "healthy";
+          $("health-status-display").innerHTML = `
+      <div class="health-status ${ok ? "health-ok" : "health-bad"}" style="margin-bottom:12px">
+        <span class="dot ${ok ? "pulse" : ""}"></span> ${h.status.toUpperCase()}
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:2">
+        Database: <strong style="color:${h.checks.database === "ok" ? "var(--success)" : "var(--accent)"}">${h.checks.database}</strong><br>
+        Uptime: <strong>${h.uptime_s}s</strong><br>
+        Version: <strong>${h.version}</strong>
+      </div>
+    `;
+          $("health-badge").className =
+            `health-status ${ok ? "health-ok" : "health-bad"}`;
+          $("health-badge").innerHTML =
+            `<span class="dot ${ok ? "pulse" : ""}"></span> ${ok ? "Healthy" : "Degraded"}`;
+        }
+
+        // Metrics
+        if (metRes.ok && typeof metRes.data === "string") {
+          const lines = metRes.data
+            .split("\n")
+            .filter((l) => !l.startsWith("#"));
+          $("health-metrics").innerHTML =
+            `<div style="font-family:var(--font-mono);font-size:12px;line-height:2.2;color:var(--muted)">` +
+            lines
+              .map((l) => {
+                const [k, v] = l.split(" ");
+                return `<div>${k.replace(/_/g, " ")}: <strong style="color:var(--text)">${v}</strong></div>`;
+              })
+              .join("") +
+            "</div>";
+        }
+
+        // Alerts log
+        if (alertRes.ok) {
+          const alerts = alertRes.data.alerts || [];
+          const log = $("alerts-log");
+          if (!alerts.length) {
+            log.innerHTML = '<span class="log-ok">✓ No recent alerts</span>';
+          } else {
+            log.innerHTML = alerts
+              .reverse()
+              .map((a) => {
+                const ts = new Date(a.ts * 1000).toISOString();
+                if (a.type === "high_error_rate") {
+                  return `<div class="log-err">[${ts}] [ALERT] HIGH_ERROR_RATE endpoint=${a.endpoint} count=${a.count}</div>`;
+                }
+                return `<div class="log-warn">[${ts}] [ALERT] SLOW_RESPONSE endpoint=${a.endpoint} ms=${a.response_time_ms}</div>`;
+              })
+              .join("");
+          }
+        }
+      }
+
+      // ── HELPERS ───────────────────────────────────────────────────────────────────
+      function showModalErr(elId, msg) {
+        const el = $(elId);
+        el.textContent = msg;
+        show(elId);
+      }
+
+      // Close modals on overlay click
+      ["movie-modal", "wl-modal", "wl-edit-modal"].forEach((id) => {
+        $(id).addEventListener("click", (e) => {
+          if (e.target === $(id)) hide(id);
+        });
+      });
+
+      restoreAuthState();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+.DS_Store
+
+# Secrets / env
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Runtime artifacts
+backend/src/instance/*.db
+backend/src/logs/*.log
+
+# Node
+backend/node_modules/
+frontend/node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
