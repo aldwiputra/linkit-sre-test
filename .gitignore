@@ -12,14 +12,21 @@ __pycache__/
 venv/
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
-# Runtime artifacts
-backend/src/instance/*.db
-backend/src/logs/*.log
+# Runtime artifacts (section-3 mini-app backend)
+section-3-mini-app/backend/src/instance/*.db
+section-3-mini-app/backend/src/instance/*.db-*
+section-3-mini-app/backend/src/instance/*.db-journal
+section-3-mini-app/backend/src/instance/*.db-wal
+section-3-mini-app/backend/src/instance/*.db-shm
+section-3-mini-app/backend/src/logs/*.log
 
 # Node
-backend/node_modules/
-frontend/node_modules/
+section-3-mini-app/backend/node_modules/
+section-3-mini-app/frontend/node_modules/
 npm-debug.log*
 yarn-error.log*
 pnpm-debug.log*

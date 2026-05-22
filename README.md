@@ -38,10 +38,10 @@ linkit-sre-test/
 ```bash
 # Please use docker-compose to make sure the apps run properly
 # Docker
-docker-compose up --build
+cd section-3-mini-app && docker-compose up --build
 
 # Local
-cd backend && pip install -r requirements.txt
+cd section-3-mini-app/backend && pip install -r requirements.txt
 cd src && python server.py
 # Open frontend/index.html in a browser
 
