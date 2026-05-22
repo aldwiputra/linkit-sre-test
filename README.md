@@ -6,31 +6,34 @@
 
 ```
 linkit-sre-test/
-├── backend/
-│   ├── src/
-│   │   ├── app.py              # Flask app factory
-│   │   ├── server.py           # Entry point
-│   │   ├── models/
-│   │   │   ├── user.py         # Master: users
-│   │   │   └── movie.py        # Master: movies + Transactional: watchlist
-│   │   ├── routes/
-│   │   │   ├── auth.py         # POST /auth/login|register, GET /auth/me
-│   │   │   ├── movies.py       # CRUD + /sync from SampleAPIs
-│   │   │   ├── watchlist.py    # CRUD transactional entries
-│   │   │   └── health.py       # /health, /metrics, /alerts
-│   │   └── utils/
-│   │       ├── logger.py       # Structured logging (app/transaction/error)
-│   │       ├── alert_simulator.py  # In-memory alert simulation
-│   │       └── response.py     # JSON response helpers
-│   ├── requirements.txt
-│   └── Dockerfile
-├── frontend/
-│   ├── index.html              # Single-file dashboard
-│   └── Dockerfile
-├── docs/
-│   └── ANSWERS.md              # Section 1 & 2 written answers
-├── docker-compose.yml
-└── README.md
+├── section-1-observability/
+│   └── ANSWERS.md              # Root causes, alert rules, improvements
+├── section-2-infrastructure/
+│   └── ANSWERS.md              # Step-by-step troubleshooting with commands
+├── section-3-cinevault/
+│   ├── backend/
+│   │   ├── src/
+│   │   │   ├── server.js           # Entry point
+│   │   │   ├── app.js              # Express app factory
+│   │   │   ├── models/
+│   │   │   │   ├── user.js         # Master: users
+│   │   │   │   └── movie.js        # Master: movies + Transactional: watchlist
+│   │   │   ├── routes/
+│   │   │   │   ├── auth.js         # POST /auth/login|register, GET /auth/me
+│   │   │   │   ├── movies.js       # CRUD + /sync from SampleAPIs
+│   │   │   │   ├── watchlist.js    # CRUD transactional entries
+│   │   │   │   └── health.js       # /health, /metrics, /alerts
+│   │   │   └── utils/
+│   │   │       ├── logger.js       # Structured logging (app/transaction/error)
+│   │   │       ├── alertSimulator.js  # In-memory alert simulation
+│   │   │       └── response.js     # JSON response helpers
+│   │   ├── package.json
+│   │   └── Dockerfile
+│   ├── frontend/
+│   │   ├── index.html              # Single-file dashboard
+│   │   └── Dockerfile
+│   ├── docker-compose.yml
+└── README.md                       # Root overview linking all 3 sections
 ```
 
 ## Quick Start
