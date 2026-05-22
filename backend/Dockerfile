@@ -24,7 +24,7 @@ RUN mkdir -p /app/src/logs
 RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
 
-EXPOSE 5000
+EXPOSE 8383
 
 ENV PYTHONUNBUFFERED=1 \
     JWT_SECRET_KEY=change-me-in-production-at-least-32-chars \

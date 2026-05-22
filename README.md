@@ -1,7 +1,9 @@
 # CineVault — PT LINKIT SRE Technical Test
+
 **Candidate:** Aldiansyah Dwi Putra
 
 ## Project Structure
+
 ```
 linkit-sre-test/
 ├── backend/
@@ -34,6 +36,7 @@ linkit-sre-test/
 ## Quick Start
 
 ```bash
+# Please use docker-compose to make sure the apps run properly
 # Docker
 docker-compose up --build
 
@@ -46,8 +49,9 @@ cd src && python server.py
 ```
 
 ## Endpoints
-- Frontend: http://localhost:3000
-- Backend:  http://localhost:5000
-- Health:   http://localhost:5000/api/health
-- Metrics:  http://localhost:5000/api/metrics
-- Alerts:   http://localhost:5000/api/alerts
+
+- Frontend: http://127.0.0.1:3000
+- Backend: http://localhost:8383
+- Health: http://localhost:8383/api/health
+- Metrics: http://localhost:8383/api/metrics
+- Alerts: http://localhost:8383/api/alerts
